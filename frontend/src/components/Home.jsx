@@ -1,7 +1,4 @@
-import styled from '@emotion/styled'
 import { Box, Button, Stack, TextField, Typography } from '@mui/material'
-import { red } from '@mui/material/colors'
-import { Container, maxWidth } from '@mui/system'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
