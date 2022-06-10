@@ -22,7 +22,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 export default function Post(props) {
 
   const likeHandler = ()=>{
-    // axios.put(`/post/${props.id}`,)
+    
   }
 
   return (

@@ -1,20 +1,21 @@
 import { Box } from '@mui/system'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import {AuthenicationContext} from '../context/AuthContext'
 import Post from './Posts'
 
 export default function Feed(props) {
 
+  const {state} = useContext(AuthenicationContext)
   const [posts,setPosts] = useState([])
-  console.log(props.user.userName)
+  
 
   useEffect(()=>{
     console.log("test")
     console.log(posts)
-    //  props.user.userName?
-     axios.get(`/post/${props.user.userName}`)
-    //  :axios.get(`post/timeline/${props.user.userName}`)
-    .then(res=> {
+    const tem = props.user ? axios.get(`/post/${props.user.userName}`):
+    axios.get(`/post/${state.user.name}`)
+    tem.then(res=> {
       if(!res.data.Iserror) {
         console.log(res.data.post)
         setPosts(res.data.post)

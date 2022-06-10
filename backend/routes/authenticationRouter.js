@@ -39,7 +39,7 @@ Authrouter.post("/register", async (req,res)=>{
 })
 Authrouter.post("/login",async (req,res)=>{
     try{
-        const User = await Usermodel.findOne({name:req.body.userId})
+        const User = await Usermodel.findOne({name:req.body.name})
         console.log(User)
 
         if(!User) {

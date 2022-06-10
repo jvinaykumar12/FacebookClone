@@ -2,11 +2,13 @@ import { Notifications } from '@mui/icons-material';
 import EmailIcon from '@mui/icons-material/Email';
 import { AppBar, Avatar, Badge, InputBase, styled, Toolbar, Typography } from '@mui/material'
 import { padding } from '@mui/system';
- import React from 'react'
+ import React, { useContext } from 'react'
+import { AuthenicationContext } from '../context/AuthContext';
 
 export default function Navbar() {
 
 
+  const {state}  = useContext(AuthenicationContext)
   const CustomizedToolbar = styled(Toolbar)({
       display : 'flex',
       justifyContent: 'space-between'
