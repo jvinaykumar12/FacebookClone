@@ -8,6 +8,7 @@ import authRouter from "./routes/authenticationRouter.js";
 import postRouter from "./routes/postsRouter.js"
 import cors from "cors"
 import multer from "multer";
+import path from 'path'
 
 const app = express()
 app.use(cors())
@@ -25,13 +26,15 @@ const storage = multer.diskStorage({
         cb(null,"public/images")
     },
     filename: (req,file,cb) => {
-        cb(null,file.originalname)
+        cb(null,req.body.name)
     }
 })
 
 const upload = multer({storage})
-// const upload = multer({dest:"public/images"})
-app.post("/image/upload",upload.single("file"),(req,res)=>{
+const name = path.resolve()
+app.use('/images',express.static(path.join(name,'/public/images')))
+
+app.post("/image/upload",upload.single('file'),(req,res)=>{
     try{
         return res.status(200).json("uploaded")
     }

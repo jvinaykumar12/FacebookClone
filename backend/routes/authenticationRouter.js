@@ -45,7 +45,7 @@ Authrouter.post("/login",async (req,res)=>{
         if(!User) {
             return res.status(403).json({
                 isError:true,
-                error:"userId"
+                error:"name"
             })
         }
 

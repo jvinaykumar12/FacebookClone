@@ -17,7 +17,6 @@ export default function Home() {
                 <Feed/>
                 <Rightbar/>
             </Stack>
-            <Link to = '/login'>test</Link>
     </Box>
   )
 }

@@ -3,14 +3,13 @@ import mongoose from "mongoose";
 const schema = mongoose.Schema({
 
     userId:{
-        type:String,
+        type:String
     },
     name:{
-        type:String,
+        type:String
     },
     image:{
-        data:Buffer,
-        contentType:String
+        type:String
     },
     description:{
         type:String

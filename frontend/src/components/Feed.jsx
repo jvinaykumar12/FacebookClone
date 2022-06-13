@@ -2,6 +2,7 @@ import { Box } from '@mui/system'
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import {AuthenicationContext} from '../context/AuthContext'
+import PostModal from '../pages/PostModal'
 import Post from './Posts'
 
 export default function Feed(props) {
@@ -27,7 +28,7 @@ export default function Feed(props) {
     <Box>
       {
         posts.map((e)=>
-          <Post key = {e._id} props={{likes:e.likes.length,userId:e.userId}}></Post>
+          <Post key = {e._id} props={e}></Post>
         )
       }
     </Box>
