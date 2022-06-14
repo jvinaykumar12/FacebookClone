@@ -23,6 +23,6 @@ const schema = mongoose.Schema({
         default:[]
     }
     
-},{timestamp:true})
+},{timestamps:true})
 
 export default mongoose.model("postList",schema)

@@ -14,19 +14,36 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Checkbox, Stack } from '@mui/material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { useContext } from 'react';
+import { AuthenicationContext } from '../context/AuthContext';
+import axios from 'axios';
+import { useState } from 'react';
+import { Box } from '@mui/system';
+
 
 export default function Post(props) {
+  const {state} = useContext(AuthenicationContext)
+  const [toggleLike,setToggleLike] = useState(props.props.likes.includes(state.user._id))
+  const [likeCount,setLikeCount] = useState(props.props.likes.length)
+  const [toggleCheckBox,setToggleCheckBox] = useState(false)
 
   const likeHandler = ()=>{
-    
+    setToggleCheckBox(true)
+    axios.put(`post/${props.props._id}/like`,{id:state.user._id})
+    .then((res)=>{
+      if(toggleLike) setLikeCount(likeCount-1)
+      else setLikeCount(likeCount+1)
+      setToggleLike(prev=>(!prev)) 
+      setToggleCheckBox(false)    
+    })
+    .catch(e=>{
+      console.log(e)
+    })
   }
 
   return (
     <>
-      {/* <video controls name="media" crossOrigin="anonymous">
-         <source  src={`http://localhost:3001/images/${props.props.image}`} type="video/mp4"/>
-      </video> */}
-      <Card sx={{ maxWidth: 400 }}>
+      <Card sx={{ maxWidth: 500 }}>
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -54,12 +71,13 @@ export default function Post(props) {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <Stack sx = {{flexDirection:"row"}}>
-              <Checkbox onClick={likeHandler} icon={<ThumbUpOutlinedIcon />} checkedIcon = {<ThumbUpIcon/>} sx={{color:green[400]}}/>
-              <Typography>{props.props.likes}</Typography>
-            </Stack>
-          </IconButton>
+          <Stack direction={'row'}>
+            <IconButton disabled={toggleCheckBox} onClick={likeHandler}>
+              {toggleLike?<ThumbUpIcon sx={{color:"green"}}/>
+              :<ThumbUpOutlinedIcon sx={{color:"gray"}}/>}
+            </IconButton>
+            <Typography>{likeCount}</Typography>
+          </Stack>
           <IconButton aria-label="share">
             <ShareIcon />
           </IconButton>

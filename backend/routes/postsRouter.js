@@ -56,6 +56,7 @@ postRouter.delete("/:id", async (req,res) =>{
 
 postRouter.put("/:id/like",async (req,res)=>{
     try{
+        console.log("liked")
         const post = await postModel.findById(req.params.id)
         if(post) {
             if(!post.likes.includes(req.body.id)) {
@@ -67,6 +68,9 @@ postRouter.put("/:id/like",async (req,res)=>{
                 res.send("unliked")
             }
         }
+        else {
+            res.json("not found")
+        }
     }
     catch(e) {
         res.send(e.message)
@@ -75,6 +79,7 @@ postRouter.put("/:id/like",async (req,res)=>{
 
 postRouter.put("/:id/dislike",async (req,res)=>{
     try{
+        console.log("disliked")
         const post = await postModel.findById(req.params.id)
         if(post) {
             if(!post.dislikes.includes(req.body.id)) {

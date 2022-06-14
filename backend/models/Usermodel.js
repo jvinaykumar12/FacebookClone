@@ -12,6 +12,9 @@ const Schema = mongoose.Schema({
     password:{
         type:String,
     },
+    profilePicture:{
+        type:String,
+    },
     location:{
         type: String,
     },
