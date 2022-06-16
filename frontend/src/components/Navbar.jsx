@@ -1,37 +1,51 @@
-import { Notifications } from '@mui/icons-material';
+import { Notifications, Search, SearchTwoTone } from '@mui/icons-material';
 import EmailIcon from '@mui/icons-material/Email';
-import { AppBar, Avatar, Badge, InputBase, styled, Toolbar, Typography } from '@mui/material'
+import { AppBar, Avatar, Badge, Box, InputBase, styled, TextField, Toolbar, Typography } from '@mui/material'
 import { padding } from '@mui/system';
+import axios from 'axios';
  import React, { useContext } from 'react'
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthenicationContext } from '../context/AuthContext';
 
 export default function Navbar() {
 
 
-  const {state}  = useContext(AuthenicationContext)
-  const CustomizedToolbar = styled(Toolbar)({
-      display : 'flex',
-      justifyContent: 'space-between'
-  })
-
-  const CustomizedSearch = styled("div")(({theme})=>({
-    backgroundColor : "white",
-    width:"20%",
-    borderRadius : theme.shape.borderRadius,
-    padding: '5px'
-  }))
+  const {state,profile,setProfile}  = useContext(AuthenicationContext)
+  const navigate = useNavigate()
 
   const CustomizedIcon = styled("div")(({theme})=>({
       display:'flex',
       gap : "20px"
   }))
+  const [searchData,setSearchData] = useState('')
+
+  const updateSearch = (e)=>{
+    setSearchData(e.target.value)
+
+  }
+
+  const sendData = ()=>{
+    axios.get(`/users/${searchData}`)
+    .then((res)=>{
+        setProfile(res.data.name)
+    })
+  }
+
+  useEffect(()=>{
+    if(searchData)navigate('/profile',{replace:true})
+  },[profile])
 
 
   return (
     <AppBar position='sticky' >
-        <CustomizedToolbar>
+        <Toolbar sx={{display : 'flex',justifyContent: 'space-between'}}>
             <Typography>Social Media</Typography>
-            <CustomizedSearch sx={{display:{xs:'none',sm:'block'}}}><InputBase placeholder='Search'/></CustomizedSearch>
+            <Box sx={{display:'flex',alignItems:'center',alignContent:'center',gap:'5px'}}>
+                <TextField onChange={updateSearch} value = {searchData} sx={{display:{xs:'none',sm:'block'},backgroundColor:'white',borderRadius:'5px'}} size='small'/>
+                <SearchTwoTone onClick={sendData}/>
+            </Box>
             <CustomizedIcon>
                 <Badge badgeContent = {4} color="secondary">
                     <EmailIcon></EmailIcon>
@@ -41,7 +55,7 @@ export default function Navbar() {
                 </Badge>
                 <Avatar src={require('./test.png')} sx={{height:"30px",width:"30px"}}></Avatar>
             </CustomizedIcon>
-        </CustomizedToolbar>
+        </Toolbar>
     </AppBar>
   )
 }

@@ -7,23 +7,22 @@ import Post from './Posts'
 
 export default function Feed(props) {
 
-  const {state} = useContext(AuthenicationContext)
+  const {state,profile} = useContext(AuthenicationContext)
   const [posts,setPosts] = useState([])
+  console.log(props)
   
 
   useEffect(()=>{
-    console.log(posts)
     const tem = props.user ? axios.get(`/post/${props.user.userName}`):
     axios.get(`/post/${state.user.name}`)
     tem.then(res=> {
       if(!res.data.Iserror) {
-        console.log(res.data)
         res.data.post.sort((a,b)=>new Date(b.createdAt)- new Date(a.createdAt))
-        console.log(res.data.post)
         setPosts(res.data.post)
+        console.log(res.data)
       }
     })
-  },[])
+  },[profile])
 
   return (
     <Box>

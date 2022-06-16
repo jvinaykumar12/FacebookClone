@@ -51,10 +51,10 @@ Usersrouter.delete("/:id", async(req,res)=>{
     }
 })
 
-Usersrouter.get("/:id", async(req,res)=>{
+Usersrouter.get("/:userName", async(req,res)=>{
 
      try{
-        const test = await Usermodel.findOne({_id:req.params.id})
+        const test = await Usermodel.findOne({name:req.params.userName})
         if(test){
             console.log(test)
             const {password,...other} = test._doc

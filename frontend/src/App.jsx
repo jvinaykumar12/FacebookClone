@@ -11,7 +11,7 @@ import Home from './pages/Home';
 
 function App() {
 
-  const {state}  =  useContext(AuthenicationContext)
+  const {state,profile}  =  useContext(AuthenicationContext)
   return(
     <>
       <Router>
@@ -32,7 +32,7 @@ function App() {
                   {state.user?<Navigate replace to ="/"/>:<Register/>}
                 </>
               } />
-              <Route path='/profile/:username' element={
+              <Route path='/profile/:userName' element={
                 <>
                   {state.user?<Profile/>:<Navigate replace to ="/login"/>}
                 </>
