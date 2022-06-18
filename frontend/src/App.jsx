@@ -32,7 +32,7 @@ function App() {
                   {state.user?<Navigate replace to ="/"/>:<Register/>}
                 </>
               } />
-              <Route path='/profile/:userName' element={
+              <Route path='/profile' element={
                 <>
                   {state.user?<Profile/>:<Navigate replace to ="/login"/>}
                 </>

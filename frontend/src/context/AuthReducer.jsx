@@ -22,6 +22,12 @@ export default function AuthReducer(state,action) {
                 isLoading : false,
                 error : action.payload
             }
+        case 'LOG_OUT' :
+            return {
+                user:null,
+                isLoading : false,
+                error : false
+            }
         default:
             return state
     }

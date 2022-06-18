@@ -10,6 +10,7 @@ export default function AuthContext({children}) {
     const [profile,setProfile] = useState()
 
     useEffect(()=>{
+      console.log('changed')
       localStorage.setItem('user',JSON.stringify(state.user))
     },[state.user])
 

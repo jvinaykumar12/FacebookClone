@@ -1,8 +1,17 @@
 import { Home, Pages, Person } from '@mui/icons-material'
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import React from 'react'
+import { useContext } from 'react'
+import { AuthenicationContext } from '../context/AuthContext'
 
 export default function Sidebar() {
+
+  const {dispatch} = useContext(AuthenicationContext)
+  const logOut = ()=>{
+    console.log('test')
+    dispatch({type:"LOG_OUT"})
+  }
+
   return (
     <Box flex = '1' >
       <Box position="fixed" sx={{display:{xs:"none",sm:"block"},width:"250px"}}>
@@ -24,11 +33,11 @@ export default function Sidebar() {
             </ListItemButton>
          </ListItem>
          <ListItem disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={logOut}>
               <ListItemIcon>
                 <Person/>
               </ListItemIcon>
-              <ListItemText primary="Friends"/>
+              <ListItemText primary="LogOut"/>
             </ListItemButton>
          </ListItem>
          
