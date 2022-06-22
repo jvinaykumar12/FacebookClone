@@ -12,6 +12,7 @@ export default function Profile(props) {
 
 
   const {state,profile,setProfile} = useContext(AuthenicationContext)
+  const [followingList,setFollowingList] = useState([])
   const [isFollowing,setIsFollowing] = useState({
     isStart:true,
     isFollowing:false
@@ -20,7 +21,6 @@ export default function Profile(props) {
   if(!userName) {
     userName = state.user.name
   }
-  console.log(isFollowing)
 
   const followUser = ()=>{
     axios.put(`/users/follow/${profile.name}`,{
@@ -31,7 +31,6 @@ export default function Profile(props) {
         isStart:false,
         isFollowing:true
       })  
-      console.log(res.data) 
     })
   }
 
@@ -49,8 +48,21 @@ export default function Profile(props) {
   }
 
   useEffect(()=>{
+
+    let temp = []
     axios.get(`/users/${state.user.name}`)
     .then(res=>{
+      temp = res.data.following
+      return (axios.get(`/users/${profile.name}`))
+    })
+    .then(res=>{
+      const r = []
+      res.data.following.forEach (e=>{
+        if(temp.includes(e)) {
+          r.push(<Button></Button>
+        }
+      })
+    })
       if(res.data.following.includes(profile.id)) {
         setIsFollowing({
           isStart:false,
@@ -68,6 +80,7 @@ export default function Profile(props) {
       })
     })
   },[profile.name])
+
   
   return (
     <Box>
@@ -100,11 +113,9 @@ export default function Profile(props) {
                           Follow {profile.name}
                       </Button> 
                     }
-                    <Stack>
-
-                    </Stack>
-                    
-                    
+                    {
+                      followingList
+                    }
                   </Box>
                 </Grid>
               </Grid>
