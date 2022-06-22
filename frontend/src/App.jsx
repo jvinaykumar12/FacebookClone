@@ -29,7 +29,7 @@ function App() {
               } />
               <Route path='/register' element={
                 <>
-                  {state.user?<Navigate replace to ="/"/>:<Register/>}
+                  {<Register/>}
                 </>
               } />
               <Route path='/profile' element={

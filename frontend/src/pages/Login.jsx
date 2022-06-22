@@ -88,7 +88,7 @@ export default function Login() {
         </Button>
         <Stack spacing={1} alignItems='center' direction="row">
             <Typography>New User?</Typography>
-            <Link to = '/'>SIGNUP</Link>
+            <Link to = '/register'>SIGNUP</Link>
         </Stack>
       </Stack>
       </form>

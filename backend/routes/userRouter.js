@@ -74,7 +74,6 @@ Usersrouter.put("/follow/:name", async(req,res)=>{
         try{
             const specialPerson = await Usermodel.findOne({name:req.params.name})
             const normalPerson = await Usermodel.findOne({_id:req.body.id})
-            console.log(specialPerson)
             if(!specialPerson.followers.includes(req.body.id)) {
                 await normalPerson.updateOne({$push:{following:specialPerson._id}})
                 await specialPerson.updateOne({$push:{followers:req.body.id}})
@@ -93,7 +92,6 @@ Usersrouter.put("/unfollow/:name", async(req,res)=>{
         try{
             const specialPerson = await Usermodel.findOne({name:req.params.name})
             const normalPerson = await Usermodel.findOne({_id:req.body.id})
-            console.log(specialPerson)
             if(specialPerson.followers.includes(req.body.id)) {
                 await normalPerson.updateOne({$pull:{following:specialPerson._id}})
                 await specialPerson.updateOne({$pull:{followers:req.body.id}})
@@ -106,6 +104,31 @@ Usersrouter.put("/unfollow/:name", async(req,res)=>{
         catch(e){
             return res.send(e.message)
         }  
+})
+
+Usersrouter.get("/friendList/:id", async(req,res)=>{
+    try{
+        const temp = await Usermodel.findOne({_id:req.params.id})
+        const friendsList = []
+        const findNames = temp.following.map(e => {
+            return (
+                Usermodel.findById(e)
+                .then(userName=>{
+                    friendsList.push({
+                    name:userName.name,
+                    id:e
+                    })
+                    return Promise.resolve()
+                })
+            )            
+        });
+        await Promise.all(findNames)
+        res.json(friendsList)
+    }
+    catch(e) {
+        res.send(e)
+    }
+
 })
 
 export default Usersrouter
