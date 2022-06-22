@@ -19,7 +19,7 @@ function App() {
           <Route path = "/">
               <Route index element={
                 <>
-                  {state.user?<Home/>:<Register/>}
+                  {state.user?<Home/>:<Login/>}
                 </>
               } />
               <Route path='/login' element={

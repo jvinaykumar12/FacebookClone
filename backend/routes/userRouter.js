@@ -56,7 +56,6 @@ Usersrouter.get("/:userName", async(req,res)=>{
      try{
         const test = await Usermodel.findOne({name:req.params.userName})
         if(test){
-            console.log(test)
             const {password,...other} = test._doc
             res.json(other)
         }
@@ -71,14 +70,13 @@ Usersrouter.get("/:userName", async(req,res)=>{
 })
 
 
-Usersrouter.put("/follow/:id", async(req,res)=>{
-    if(req.body.id!==req.params.id) {
+Usersrouter.put("/follow/:name", async(req,res)=>{
         try{
-            const specialPerson = await Usermodel.findOne({_id:req.params.id})
+            const specialPerson = await Usermodel.findOne({name:req.params.name})
             const normalPerson = await Usermodel.findOne({_id:req.body.id})
             console.log(specialPerson)
             if(!specialPerson.followers.includes(req.body.id)) {
-                await normalPerson.updateOne({$push:{following:req.params.id}})
+                await normalPerson.updateOne({$push:{following:specialPerson._id}})
                 await specialPerson.updateOne({$push:{followers:req.body.id}})
                 res.send("succefully followed")
             }
@@ -88,19 +86,16 @@ Usersrouter.put("/follow/:id", async(req,res)=>{
         }
         catch(e){
             return res.send(e.message)
-        }
-    }
-    
+        }   
 })
 
-Usersrouter.put("/unfollow/:id", async(req,res)=>{
-    if(req.body.id!==req.params.id) {
+Usersrouter.put("/unfollow/:name", async(req,res)=>{
         try{
-            const specialPerson = await Usermodel.findOne({_id:req.params.id})
+            const specialPerson = await Usermodel.findOne({name:req.params.name})
             const normalPerson = await Usermodel.findOne({_id:req.body.id})
             console.log(specialPerson)
             if(specialPerson.followers.includes(req.body.id)) {
-                await normalPerson.updateOne({$pull:{following:req.params.id}})
+                await normalPerson.updateOne({$pull:{following:specialPerson._id}})
                 await specialPerson.updateOne({$pull:{followers:req.body.id}})
                 res.send("succesfully unfollowed")
             }
@@ -110,9 +105,7 @@ Usersrouter.put("/unfollow/:id", async(req,res)=>{
         }
         catch(e){
             return res.send(e.message)
-        }
-    } 
-    
+        }  
 })
 
 export default Usersrouter

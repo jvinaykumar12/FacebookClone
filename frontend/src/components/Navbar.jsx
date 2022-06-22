@@ -29,13 +29,17 @@ export default function Navbar() {
   const sendData = ()=>{
     axios.get(`/users/${searchData}`)
     .then((res)=>{
-        setProfile(res.data.name)
+        setProfile({
+          name:res.data.name,
+          id:res.data._id,
+          isLoading:true
+        })
     })
   }
 
   useEffect(()=>{
-    if(searchData)navigate('/profile',{replace:true})
-  },[profile])
+    if(searchData) navigate('/profile',{replace:true})
+  },[profile.name])
 
 
   return (

@@ -124,11 +124,25 @@ postRouter.get("/:userName", async (req,res)=>{
 
 postRouter.get("/timeline/:id",async(req,res)=>{
     try{
-        const post = await postModel.find({userId:req.params.id})
-        console.log(post)
+        const post = await Usermodel.findOne({_id:req.params.id})
+        const allPosts = []
+
+        const follow = post.following.map(e=> {
+             return (
+                postModel.find({userId:e})
+                .then(data=>{
+                    data.forEach(element => {
+                        allPosts.push(element)
+                    });
+                    return Promise.resolve()
+                })
+             )
+        });
+        await Promise.all(follow)
+
         res.json({
             Iserror:false,
-            post:post
+            post:allPosts   
         })
     }
     catch(e){
