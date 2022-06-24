@@ -1,10 +1,9 @@
 import { Avatar, Box, Button, Grid, Stack, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import Feed from '../components/Feed'
+import Friendbar from '../components/Friendbar'
 import Navbar from '../components/Navbar'
-import Rightbar from '../components/Rightbar'
 import Sidebar from '../components/Sidebar'
 import { AuthenicationContext } from '../context/AuthContext'
 
@@ -17,58 +16,74 @@ export default function Profile(props) {
     isStart:true,
     isFollowing:false
   })
+
   let userName = profile.name
+  let userId = profile.id
   if(!userName) {
     userName = state.user.name
+    userId = state.user._id
   }
 
-  const followUser = ()=>{
+  const followUser = (e)=>{
+    const temp = e ? axios.put(`/users/follow/${e}`,{
+      id:state.user._id,
+    }):
     axios.put(`/users/follow/${profile.name}`,{
       id:state.user._id,
     })
+    console.log(profile.name)
+    temp
     .then(res=>{
-      setIsFollowing({
-        isStart:false,
-        isFollowing:true
-      })  
-    })
-  }
-
-  const unFollowUser = ()=>{
-    axios.put(`/users/unfollow/${profile.name}`,{
-      id:state.user._id
-    })
-    .then(res=>{
-      console.log(res.data)
-      setIsFollowing({
-        isStart:false,
-        isFollowing:false
-      })
-    })
-  }
-
-  useEffect(()=>{
-
-    let temp = []
-    axios.get(`/users/${state.user.name}`)
-    .then(res=>{
-      temp = res.data.following
-      return (axios.get(`/users/${profile.name}`))
-    })
-    .then(res=>{
-      const r = []
-      res.data.following.forEach (e=>{
-        if(temp.includes(e)) {
-          r.push(<Button></Button>
-        }
-      })
-    })
-      if(res.data.following.includes(profile.id)) {
+      if(!e) {
         setIsFollowing({
           isStart:false,
           isFollowing:true
         })
-      }else {
+      }  
+    })
+  }
+
+  const unFollowUser = (e)=>{
+    const temp = e ? axios.put(`/users/unfollow/${e}`,{
+      id:state.user._id
+    }):
+    axios.put(`/users/unfollow/${profile.name}`,{
+      id:state.user._id
+    })
+    console.log(profile.name)
+    temp
+    .then(res=>{
+      console.log(res.data)
+      if(!e) {
+        setIsFollowing({
+          isStart:false,
+          isFollowing:false
+        })
+      }
+    })
+  }
+
+  useEffect(()=>{
+    let temp = []
+    axios.get(`/users/${state.user.name}`)
+    .then(res=>{
+      temp = res.data.following
+      return (axios.get(`/users/friendList/${userId}`))
+    })
+    .then(res=>{
+      const r = []
+      console.log(res.data)
+      res.data.forEach(e=>{
+        const check = temp.includes(e.id)
+        r.push(<Friendbar key={e.id} props = {{followUser,e,unFollowUser,isFollowing:check?true:false}}/>)
+      })
+      if(temp.includes(profile.id)) {
+        setIsFollowing({
+          isStart:false,
+          isFollowing:true
+        })
+      }
+      else {
         setIsFollowing({
           isStart:false,
           isFollowing:false
@@ -78,7 +93,8 @@ export default function Profile(props) {
         ...profile,
         isLoading:false
       })
-    })
+      setFollowingList(r)
+    })     
   },[profile.name])
 
   
@@ -106,16 +122,16 @@ export default function Profile(props) {
                       profile.isLoading?
                       <></>:
                       isFollowing.isFollowing?
-                      <Button sx={{width:'200px'}} onClick={unFollowUser}>
+                      <Button sx={{width:'200px'}} onClick={()=>unFollowUser()}>
                           Unfollow {profile.name}
                       </Button>:
-                      <Button sx={{width:'200px'}} onClick={followUser}>
+                      <Button sx={{width:'200px'}} onClick={()=>followUser()}>
                           Follow {profile.name}
                       </Button> 
                     }
-                    {
-                      followingList
-                    }
+                    <Box sx={{display:'flex',gap:'5px',flexDirection:'column'}}>
+                      {followingList}
+                    </Box>
                   </Box>
                 </Grid>
               </Grid>

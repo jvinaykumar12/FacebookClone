@@ -1,7 +1,6 @@
-import { Notifications, Search, SearchTwoTone } from '@mui/icons-material';
+import { Notifications, SearchTwoTone } from '@mui/icons-material';
 import EmailIcon from '@mui/icons-material/Email';
-import { AppBar, Avatar, Badge, Box, InputBase, styled, TextField, Toolbar, Typography } from '@mui/material'
-import { padding } from '@mui/system';
+import { AppBar, Avatar, Badge, Box, styled, TextField, Toolbar, Typography } from '@mui/material'
 import axios from 'axios';
  import React, { useContext } from 'react'
 import { useEffect } from 'react';

@@ -2,26 +2,32 @@ import { Home, Pages, Person } from '@mui/icons-material'
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import React from 'react'
 import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AuthenicationContext } from '../context/AuthContext'
 
 export default function Sidebar() {
 
+  const navigate = useNavigate()
   const {dispatch} = useContext(AuthenicationContext)
   const logOut = ()=>{
     console.log('test')
     dispatch({type:"LOG_OUT"})
   }
 
+  const toHome = ()=>{
+    navigate('/')
+  }
+
   return (
     <Box flex = '1' >
-      <Box position="fixed" sx={{display:{xs:"none",sm:"block"},width:"250px"}}>
+      <Box position="fixed" sx={{display:{xs:"none",sm:"block"}}}>
        <List>
          <ListItem disablePadding >
-            <ListItemButton>
+            <ListItemButton onClick={toHome}>
               <ListItemIcon>
-                <Home/>
+                  <Home/>
               </ListItemIcon>
-              <ListItemText primary="Inbox"/>
+              <ListItemText primary="Home"/>
             </ListItemButton>
          </ListItem>
          <ListItem disablePadding>

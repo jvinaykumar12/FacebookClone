@@ -1,10 +1,29 @@
+import { Add, Remove } from '@mui/icons-material'
+import { Box, Button, Fab, Typography } from '@mui/material'
 import React from 'react'
+import { useState } from 'react'
 
 export default function Friendbar(props) {
-  return (
-    <>
-        {
 
-        }
-    </>
+  const {isFollowing,followUser,unFollowUser,e} = props.props
+  const [toggle,setToggle] = useState(isFollowing)
+
+
+  return (
+    <Box sx={{display:'flex',gap:'10px',alignItems:'center',alignContent:'center'}}>
+      <Typography>{e.name}</Typography>
+      {
+        toggle?
+        <Fab size="small" variant='extended' sx = {{display:'flex',gap:'5px',alignItems:'center',alignContent:'center',backgroundColor:'white'}} onClick={()=>{console.log('test');unFollowUser(e.name); setToggle(false)}}>
+          <Remove />
+          <Typography>UNFOLLOW</Typography>
+        </Fab>:
+        <Fab size="small" variant='extended' sx = {{display:'flex',gap:'5px',alignItems:'center',alignContent:'center',backgroundColor:'green'}} onClick={()=>{console.log('test');followUser(e.name); setToggle(true)}}>
+          <Add />
+          <Typography>FOLLOW</Typography>
+        </Fab>
+      }
+    </Box>
   )
+
+}
