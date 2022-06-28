@@ -42,7 +42,7 @@ export default function Navbar() {
 
 
   return (
-    <AppBar position='sticky' >
+    <AppBar position='sticky' sx={{height:'10vh'}}>
         <Toolbar sx={{display : 'flex',justifyContent: 'space-between'}}>
             <Typography>Social Media</Typography>
             <Box sx={{display:'flex',alignItems:'center',alignContent:'center',gap:'5px'}}>

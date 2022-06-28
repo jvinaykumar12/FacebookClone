@@ -50,7 +50,6 @@ export default function Profile(props) {
     axios.put(`/users/unfollow/${profile.name}`,{
       id:state.user._id
     })
-    console.log(profile.name)
     temp
     .then(res=>{
       console.log(res.data)

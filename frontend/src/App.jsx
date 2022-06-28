@@ -6,6 +6,7 @@ import Profile from './pages/profile';
 import { useContext } from 'react';
 import { AuthenicationContext } from './context/AuthContext';
 import Home from './pages/Home';
+import Chatpage from './pages/Chatpage';
 
 
 
@@ -36,6 +37,9 @@ function App() {
                 <>
                   {state.user?<Profile/>:<Navigate replace to ="/login"/>}
                 </>
+              }/>
+              <Route path='/chat' element={
+                <Chatpage/>
               }/>
           </Route>
         </Routes>
