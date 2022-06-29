@@ -8,6 +8,7 @@ import { AuthenicationContext } from '../context/AuthContext'
 export default function Sidebar() {
 
   const navigate = useNavigate()
+  const setProfile = useContext(AuthenicationContext).setProfile
   const {dispatch} = useContext(AuthenicationContext)
   const logOut = ()=>{
     console.log('test')
@@ -15,6 +16,7 @@ export default function Sidebar() {
   }
 
   const toHome = ()=>{
+    setProfile({name:'',id:'',isLoading:false})  
     navigate('/')
   }
 

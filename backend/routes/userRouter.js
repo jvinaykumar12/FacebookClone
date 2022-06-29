@@ -65,6 +65,9 @@ Usersrouter.get("/:userName", async(req,res)=>{
 
 
 Usersrouter.put("/follow/:name", async(req,res)=>{
+        if(req.params.name===req.body.name){
+            res.send('you can not follow yourself')
+        }
         try{
             const specialPerson = await Usermodel.findOne({name:req.params.name})
             const normalPerson = await Usermodel.findOne({_id:req.body.id})

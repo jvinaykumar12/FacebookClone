@@ -7,15 +7,12 @@ import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar'
 import { AuthenicationContext } from '../context/AuthContext'
 
-export default function Profile(props) {
+export default function Profile() {
 
 
   const {state,profile,setProfile} = useContext(AuthenicationContext)
   const [followingList,setFollowingList] = useState([])
-  const [isFollowing,setIsFollowing] = useState({
-    isStart:true,
-    isFollowing:false
-  })
+  const [isFollowing,setIsFollowing] = useState(false)
 
   let userName = profile.name
   let userId = profile.id
@@ -30,16 +27,17 @@ export default function Profile(props) {
     }):
     axios.put(`/users/follow/${profile.name}`,{
       id:state.user._id,
+      name:state.user.name
     })
     console.log(profile.name)
     temp
     .then(res=>{
       if(!e) {
-        setIsFollowing({
-          isStart:false,
-          isFollowing:true
-        })
+        setIsFollowing(true)
       }  
+    })
+    .catch(err=>{
+      console.log(err)
     })
   }
 
@@ -52,13 +50,12 @@ export default function Profile(props) {
     })
     temp
     .then(res=>{
-      console.log(res.data)
       if(!e) {
-        setIsFollowing({
-          isStart:false,
-          isFollowing:false
-        })
+        setIsFollowing(false)
       }
+    })
+    .catch(err=>{
+      console.log(err)
     })
   }
 
@@ -71,22 +68,16 @@ export default function Profile(props) {
     })
     .then(res=>{
       const r = []
-      console.log(res.data)
       res.data.forEach(e=>{
         const check = temp.includes(e.id)
+        
         r.push(<Friendbar key={e.id} props = {{followUser,e,unFollowUser,isFollowing:check?true:false}}/>)
       })
       if(temp.includes(profile.id)) {
-        setIsFollowing({
-          isStart:false,
-          isFollowing:true
-        })
+        setIsFollowing(true)
       }
       else {
-        setIsFollowing({
-          isStart:false,
-          isFollowing:false
-        })
+        setIsFollowing(false)
       }
       setProfile({
         ...profile,
@@ -113,21 +104,26 @@ export default function Profile(props) {
                 </Grid>
                 <Grid item xs ={5} sx = {{display:'flex',flexDirection:'column',alignContent:'center',alignItems:'center'}}>
                   <Box sx={{padding:"20px"}} position='fixed'>
-                    {
-                      !profile.name || profile.name===state.user.name?
-                      <Button>
-                          EDIT PROFILE
-                      </Button>:  
-                      profile.isLoading?
-                      <></>:
-                      isFollowing.isFollowing?
-                      <Button sx={{width:'200px'}} onClick={()=>unFollowUser()}>
-                          Unfollow {profile.name}
-                      </Button>:
-                      <Button sx={{width:'200px'}} onClick={()=>followUser()}>
-                          Follow {profile.name}
-                      </Button> 
-                    }
+                    <Box>
+                      {
+                        !profile.name || profile.name===state.user.name?
+                        <Button>
+                            EDIT PROFILE
+                        </Button>:  
+                        profile.isLoading?
+                        <></>:
+                        isFollowing?
+                        <Button  onClick={()=>unFollowUser()}>
+                            Unfollow {profile.name}
+                        </Button>:
+                        <Button  onClick={()=>followUser()}>
+                            Follow {profile.name}
+                        </Button> 
+                      }
+                    </Box>
+                    <Box>
+                      {(profile.name!==state.user.name && profile.name) && <Button>MESSAGE {profile.name}</Button>}
+                    </Box>
                     <Box sx={{display:'flex',gap:'5px',flexDirection:'column'}}>
                       {followingList}
                     </Box>

@@ -26,14 +26,17 @@ export default function Navbar() {
   }
 
   const sendData = ()=>{
-    axios.get(`/users/${searchData}`)
-    .then((res)=>{
-        setProfile({
-          name:res.data.name,
-          id:res.data._id,
-          isLoading:true
-        })
-    })
+    if(profile.name!==searchData) {
+      axios.get(`/users/${searchData}`)
+      .then((res)=>{
+          setProfile({
+            name:res.data.name,
+            id:res.data._id,
+            isLoading:true
+          })
+      })
+    }
+  
   }
 
   useEffect(()=>{
