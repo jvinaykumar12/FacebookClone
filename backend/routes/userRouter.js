@@ -3,12 +3,6 @@ import bcrypt from  "bcrypt";
 import Usermodel from "../models/Usermodel.js";
 const Usersrouter = express.Router()
 
-
-//update user
-//delete user 
-// get a user 
-//follow a user 
-
 Usersrouter.put("/:id", async(req,res)=>{
     if(req.params.id === req.body.id) {
         if(req.body.password){

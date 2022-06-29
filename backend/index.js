@@ -9,6 +9,8 @@ import postRouter from "./routes/postsRouter.js"
 import cors from "cors"
 import multer from "multer";
 import path from 'path'
+import messageRouter from "./routes/messageRouter.js";
+import conversationRouter from "./routes/conversationRouter.js";
 
 const app = express()
 app.use(cors())
@@ -19,6 +21,8 @@ dotenv.config()
 app.use("/auth",authRouter)
 app.use("/users",userRouter)
 app.use("/post",postRouter)
+app.use("/message",messageRouter)
+app.use("/conversation",conversationRouter)
 mongoose.connect(process.env.MONGODB,()=>{});
 
 const storage = multer.diskStorage({
