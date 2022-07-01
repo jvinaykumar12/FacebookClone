@@ -126,7 +126,6 @@ postRouter.get("/timeline/:id",async(req,res)=>{
     try{
         const post = await Usermodel.findOne({_id:req.params.id})
         const allPosts = []
-
         const follow = post.following.map(e=> {
              return (
                 postModel.find({userId:e})
@@ -138,6 +137,15 @@ postRouter.get("/timeline/:id",async(req,res)=>{
                 })
              )
         });
+
+        follow.push(postModel.find({userId:req.params.id})
+        .then(data=>{
+            data.forEach(element => {
+                allPosts.push(element)
+            });
+            return Promise.resolve()
+        }))
+
         await Promise.all(follow)
 
         res.json({
