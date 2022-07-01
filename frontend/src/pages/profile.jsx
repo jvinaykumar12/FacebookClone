@@ -65,7 +65,10 @@ export default function Profile() {
   }
 
   const redirectToChat = (e)=>{
-    navigate(`/chat`)
+    axios.get(`/conversation/isExists/${profile.id}/${state.user._id}`)
+    .then(()=>{
+        navigate(`/chat`) 
+    })
   }
 
   useEffect(()=>{
