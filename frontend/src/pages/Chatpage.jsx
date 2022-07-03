@@ -6,14 +6,16 @@ import MessageText from '../components/MessageText'
 import { useEffect } from 'react'
 import { AuthenicationContext } from '../context/AuthContext'
 import axios from 'axios'
+import { useRef } from 'react'
 
 export default function Chatpage() {
     const {state,profile} = useContext(AuthenicationContext)
     const [selectedFriend,setSelectedFriend] = useState(profile)
     const [friendColumn,setFriendColumn] = useState([])
-    const [conversationId,setConversationId] = useState(profile.id)
+    const [conversationId,setConversationId] = useState()
     const [message,setMessage] = useState('')
     const [messageList,setMessageList] = useState([])
+    const scrollReference = useRef()
 
     const updateMessage = (e)=>{ 
         setMessage(e.target.value)
@@ -25,6 +27,14 @@ export default function Chatpage() {
             conversationId,
             sender:state.user._id,
         })
+        .then((res)=>{
+            setMessageList([...messageList,
+                <div ref={scrollReference} key={res.data._id}>
+                    <MessageText  props={{isYou:res.data.sender===state.user._id?true:false,message:res.data.message}}/>
+                </div>
+            ])
+            setMessage('')
+        })
     }
 
     const selectName = (e)=>{
@@ -32,17 +42,44 @@ export default function Chatpage() {
             ...e,
             id:e._id
         })
-        setConversationId(e.conversationId)
+        setMessage('')
+        setConversationId(e.conversationId)   
     }
 
     useEffect(()=>{
         axios.get(`/conversation/list/${state.user._id}`)
-        .then(res=>{setFriendColumn(res.data)})
+        .then(res=>{
+            let initialConversationId = null
+            res.data.forEach((details)=>{
+                if(details._id===profile.id) initialConversationId = details.conversationId
+            })
+            if(initialConversationId) setConversationId(initialConversationId)
+            setFriendColumn(res.data)
+        })
     },[state.user._id,profile.id])
 
-    // useEffect(()=>{
-    //     axios.get(``)
-    // })
+    useEffect(()=>{
+        if(conversationId) {
+            axios.get(`/message/${conversationId}`)
+            .then(res=>{
+                const temp = res.data.map(details=>{
+                    return(
+                        <div ref={scrollReference} key={details._id}>   
+                            <MessageText  props={{isYou:details.sender===state.user._id?true:false,message:details.message}}/>
+                        </div>
+                    )
+                })
+                setMessageList(temp)
+            })
+        }
+        
+    },[conversationId])
+
+    useEffect(()=>{
+        if(scrollReference.current) {
+            scrollReference.current.scrollIntoView()
+        }
+    },[messageList])
 
   return (
     <Box>
@@ -56,7 +93,9 @@ export default function Chatpage() {
             </Box>
             <Box flex='3' display='flex' flexDirection='column' gap='10px' padding='10px'>
                 <Box sx={{display:'flex',flexDirection:'column',gap:'20px',padding:'10px',minHeight:'50vh' ,overflow:'auto',overscrollBehavior:'contain'}}>
-                                            
+                    {
+                        messageList
+                    }             
                 </Box>
                 <Box sx={{display:'flex',alignItems:'center',justifyContent:'center',gap:'10px'}}>
                     <TextField multiline rows={3} sx={{width:'30vw'}} onChange={updateMessage} value={message} label={`Message ${selectedFriend.name}`}/>

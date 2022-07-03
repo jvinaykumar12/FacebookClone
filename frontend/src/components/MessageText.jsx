@@ -6,8 +6,7 @@ export default function MessageText(props) {
     <Box display='flex' justifyContent = {props.props.isYou?'flex-end':'flex-start'}>
         <Box sx={{maxWidth:'30vw',padding:'7px',borderRadius:'10px'}} 
           backgroundColor={props.props.isYou?'primary.main':'green'} color='white'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim
+            {props.props.message}
         </Box>
     </Box>
   )
