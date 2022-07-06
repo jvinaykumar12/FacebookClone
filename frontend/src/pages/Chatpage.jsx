@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { AuthenicationContext } from '../context/AuthContext'
 import axios from 'axios'
 import { useRef } from 'react'
+import {io} from 'socket.io-client'
 
 export default function Chatpage() {
     const {state,profile} = useContext(AuthenicationContext)
@@ -16,6 +17,7 @@ export default function Chatpage() {
     const [message,setMessage] = useState('')
     const [messageList,setMessageList] = useState([])
     const scrollReference = useRef()
+    const socket = useRef()
 
     const updateMessage = (e)=>{ 
         setMessage(e.target.value)
@@ -44,6 +46,7 @@ export default function Chatpage() {
         })
         setMessage('')
         setConversationId(e.conversationId)   
+        if(socket.current) socket.current.emit("type")
     }
 
     useEffect(()=>{
@@ -80,6 +83,17 @@ export default function Chatpage() {
             scrollReference.current.scrollIntoView()
         }
     },[messageList])
+
+    useEffect(()=>{
+        if(!socket.current) {
+            socket.current = io("ws://localhost:3000")
+            socket.current.on("hello",arg=>{
+                console.log(arg)
+            })
+            socket.current.on("newuserconnected",arg=>console.log(arg))
+            socket.current.on("ok",arg=>console.log("socket still running"))
+        }
+    },[])
 
   return (
     <Box>

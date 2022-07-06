@@ -1,16 +1,15 @@
 import {Button, Stack, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 export default function Register() {
 
-
+  const navigate = useNavigate()
   const[formData,setformData] = useState({
       name:"",
       password:"",
       passwordCheck:""
-
   })
 
   const defaultMessage = {
@@ -61,10 +60,11 @@ export default function Register() {
                         }
                     })
                 }
+                else {
+                    navigate('/login')
+                }
             })
       }
-      
-
   }
 
   return (

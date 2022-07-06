@@ -22,7 +22,6 @@ export default function Navbar() {
 
   const updateSearch = (e)=>{
     setSearchData(e.target.value)
-
   }
 
   const sendData = ()=>{
@@ -39,6 +38,11 @@ export default function Navbar() {
   
   }
 
+  const toHome = ()=>{
+    setProfile({name:'',id:'',isLoading:false})  
+    navigate('/')
+  }
+
   useEffect(()=>{
     if(searchData) navigate('/profile',{replace:true})
   },[profile.name])
@@ -47,7 +51,7 @@ export default function Navbar() {
   return (
     <AppBar position='sticky' sx={{height:'10vh'}}>
         <Toolbar sx={{display : 'flex',justifyContent: 'space-between'}}>
-            <Typography>Social Media</Typography>
+            <Typography onClick={toHome}>Social Media</Typography>
             <Box sx={{display:'flex',alignItems:'center',alignContent:'center',gap:'5px'}}>
                 <TextField onChange={updateSearch} value = {searchData} sx={{display:{xs:'none',sm:'block'},backgroundColor:'white',borderRadius:'5px'}} size='small'/>
                 <SearchTwoTone onClick={sendData}/>

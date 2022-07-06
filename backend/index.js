@@ -11,8 +11,11 @@ import multer from "multer";
 import path from 'path'
 import messageRouter from "./routes/messageRouter.js";
 import conversationRouter from "./routes/conversationRouter.js";
+import {Server} from "socket.io";
+import http from "http"
 
 const app = express()
+const server = http.createServer(app)
 app.use(cors())
 app.use(express.json())
 app.use(helmet())
@@ -24,6 +27,13 @@ app.use("/post",postRouter)
 app.use("/message",messageRouter)
 app.use("/conversation",conversationRouter)
 mongoose.connect(process.env.MONGODB,()=>{});
+const io = new Server(server,{
+    cors:{
+        origin:'*'
+    }
+})
+
+
 
 const storage = multer.diskStorage({
     destination: (req,file,cb)=>{
@@ -36,15 +46,24 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage})
 const name = path.resolve()
+
+io.on("connection", socket=>{
+    socket.emit("hello","socket is working")
+    io.emit("newuserconnected","one more user is connected")
+    socket.on("type",arg=>{
+        socket.emit("ok","running socket")
+    })
+})
+
 app.use('/images',express.static(path.join(name,'/public/images')))
 
 app.post("/image/upload",upload.single('file'),(req,res)=>{
-    try{
+    try {
         return res.status(200).json("uploaded")
     }
-    catch(e){
+    catch(e) {
         return res.status(400).json(e)
     }
 })
 
-app.listen(3001)
+server.listen(3001)
