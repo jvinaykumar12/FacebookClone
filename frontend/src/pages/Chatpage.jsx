@@ -16,6 +16,7 @@ export default function Chatpage() {
     const [conversationId,setConversationId] = useState()
     const [message,setMessage] = useState('')
     const [messageList,setMessageList] = useState([])
+    const [currentUsers,setCurrenUsers] = useState()
     const scrollReference = useRef()
     const socket = useRef()
 
@@ -30,6 +31,8 @@ export default function Chatpage() {
             sender:state.user._id,
         })
         .then((res)=>{
+            socket.current.emit('message',{messageText:message,userId:selectedFriend.id,
+            messageId:res.data._id,senderId:state.user._id})
             setMessageList([...messageList,
                 <div ref={scrollReference} key={res.data._id}>
                     <MessageText  props={{isYou:res.data.sender===state.user._id?true:false,message:res.data.message}}/>
@@ -39,6 +42,7 @@ export default function Chatpage() {
         })
     }
 
+
     const selectName = (e)=>{
         setSelectedFriend({
             ...e,
@@ -46,7 +50,7 @@ export default function Chatpage() {
         })
         setMessage('')
         setConversationId(e.conversationId)   
-        if(socket.current) socket.current.emit("type")
+        
     }
 
     useEffect(()=>{
@@ -85,13 +89,32 @@ export default function Chatpage() {
     },[messageList])
 
     useEffect(()=>{
+        if(socket.current) {
+            socket.current.on('receiveMessage',(message)=>{
+                if(message.senderId===selectedFriend.id) {
+                    setMessageList([...messageList,
+                        <div ref={scrollReference} key={message.messageId + 'random'}>
+                            <MessageText  props={{isYou:false,message:message.message}}/>
+                        </div>
+                    ])
+                }                
+            })
+        }
+    },[selectedFriend.id,messageList])
+
+    useEffect(()=>{
         if(!socket.current) {
             socket.current = io("ws://localhost:3000")
-            socket.current.on("hello",arg=>{
-                console.log(arg)
-            })
-            socket.current.on("newuserconnected",arg=>console.log(arg))
-            socket.current.on("ok",arg=>console.log("socket still running"))
+            socket.current.on('connect',()=>{
+                console.log(socket.current.id)
+                socket.current.emit('adduser',{userId:state.user._id,socketId:socket.current.id})
+                socket.current.on('getuser',arg=>{
+                    setCurrenUsers(arg)
+                })
+            })            
+        }
+        return()=>{
+            socket.current.emit('disconnectUser',{userId:state.user._id})
         }
     },[])
 
