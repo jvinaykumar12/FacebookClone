@@ -15,7 +15,6 @@ export default function Feed(props) {
     axios.get(`/post/timeline/${state.user._id}`)
     tem.then(res=> {
       if(!res.data.Iserror) {
-        console.log(res)
         res.data.post.sort((a,b)=>new Date(b.createdAt)- new Date(a.createdAt))
         setPosts(res.data.post)
       }

@@ -39,18 +39,21 @@ const addUser = (userId,socketId)=>{
     !currentUsers.some(element => element.userId === userId) &&
     currentUsers.push({userId,socketId})
 }
-const disconnectUser = (userId)=>{
-    currentUsers = currentUsers.filter(element=>element.userId!==userId)
+const disconnectUser = (socketId)=>{
+    currentUsers = currentUsers.filter(element=>element.socketId!==socketId)
 }
 
 io.on("connection", socket=>{
     socket.emit("hello","socket is working")
     socket.on("adduser",arg=>{
         addUser(arg.userId,arg.socketId)
+        console.log(currentUsers)
         socket.emit('online',currentUsers)
     })
-    socket.on('disconnectUser',arg=>{
-        disconnectUser(arg.userId)
+    socket.on('disconnect',()=>{
+        disconnectUser(socket.id)
+        console.log(currentUsers)
+        console.log('disconnect')
         socket.emit('online',currentUsers)
     })
     socket.on('message',arg=>{

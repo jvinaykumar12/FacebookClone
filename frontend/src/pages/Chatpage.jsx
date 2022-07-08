@@ -16,6 +16,7 @@ export default function Chatpage() {
     const [conversationId,setConversationId] = useState()
     const [message,setMessage] = useState('')
     const [messageList,setMessageList] = useState([])
+    const [incomingMessage,setIncomingMessage] = useState()
     const [currentUsers,setCurrenUsers] = useState()
     const scrollReference = useRef()
     const socket = useRef()
@@ -44,6 +45,7 @@ export default function Chatpage() {
 
 
     const selectName = (e)=>{
+        console.log(selectedFriend.id)
         setSelectedFriend({
             ...e,
             id:e._id
@@ -52,6 +54,8 @@ export default function Chatpage() {
         setConversationId(e.conversationId)   
         
     }
+
+    
 
     useEffect(()=>{
         axios.get(`/conversation/list/${state.user._id}`)
@@ -89,32 +93,27 @@ export default function Chatpage() {
     },[messageList])
 
     useEffect(()=>{
-        if(socket.current) {
-            socket.current.on('receiveMessage',(message)=>{
-                if(message.senderId===selectedFriend.id) {
-                    setMessageList([...messageList,
-                        <div ref={scrollReference} key={message.messageId + 'random'}>
-                            <MessageText  props={{isYou:false,message:message.message}}/>
-                        </div>
-                    ])
-                }                
-            })
+        if(incomingMessage && incomingMessage.senderId===selectedFriend.id) {
+            setMessageList([...messageList,
+                <div ref={scrollReference} key={incomingMessage.messageId + 'random'}>
+                    <MessageText  props={{isYou:false,message:incomingMessage.message}}/>
+                </div>
+            ])
         }
-    },[selectedFriend.id,messageList])
+    },[incomingMessage])
 
     useEffect(()=>{
         if(!socket.current) {
-            socket.current = io("ws://localhost:3000")
+            socket.current = io()
             socket.current.on('connect',()=>{
-                console.log(socket.current.id)
                 socket.current.emit('adduser',{userId:state.user._id,socketId:socket.current.id})
                 socket.current.on('getuser',arg=>{
                     setCurrenUsers(arg)
                 })
-            })            
-        }
-        return()=>{
-            socket.current.emit('disconnectUser',{userId:state.user._id})
+                socket.current.on('receiveMessage',(message)=>{
+                    setIncomingMessage(message)              
+                })
+            })     
         }
     },[])
 
