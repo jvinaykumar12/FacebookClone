@@ -1,9 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "engines": {
-    "node": "16.14.0"
-  },
   "description": "",
   "type": "module",
   "main": "index.js",
