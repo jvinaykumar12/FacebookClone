@@ -61,7 +61,7 @@ export default function Post(props) {
         <CardMedia
           component="img"
           height="60%"
-          image = {`http://localhost:3001/images/${props.props.image}`}
+          image = {`https://socialmedia.azurewebsites.net/images/${props.props.image}`}
           alt="Paella dish"
           crossOrigin="anonymous"
         />

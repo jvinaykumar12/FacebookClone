@@ -16,17 +16,44 @@ import http from "http"
 
 const app = express()
 const server = http.createServer(app)
+const name = path.resolve()                                                                             
+const port = process.env.PORT||3001 
 app.use(cors())
 app.use(express.json())
 app.use(helmet())
 app.use(morgan("common"))
 dotenv.config()
+app.use('/',express.static(path.join(name,'build')))
 app.use("/auth",authRouter)
 app.use("/users",userRouter)
 app.use("/post",postRouter)
 app.use("/message",messageRouter)
 app.use("/conversation",conversationRouter)
 mongoose.connect(process.env.MONGODB,()=>{});
+
+
+
+app.get('/',(req,res)=>{
+    res.sendFile('index.html')
+})
+const storage = multer.diskStorage({
+    destination: (req,file,cb)=>{                                           //save images
+        cb(null,"public/images")
+    },
+    filename: (req,file,cb) => {
+        cb(null,req.body.name)
+    }
+})
+const upload = multer({storage})
+app.use('/images',express.static(path.join(name,'/public/images')))
+app.post("/image/upload",upload.single('file'),(req,res)=>{
+    try {
+        return res.status(200).json("uploaded")
+    }
+    catch(e) {
+        return res.status(400).json(e)
+    }
+})
 
 
 const io = new Server(server,{
@@ -63,29 +90,4 @@ io.on("connection", socket=>{
 })
 
 
-
-
-const storage = multer.diskStorage({
-    destination: (req,file,cb)=>{                                           //save images
-        cb(null,"public/images")
-    },
-    filename: (req,file,cb) => {
-        cb(null,req.body.name)
-    }
-})
-const upload = multer({storage})
-const name = path.resolve()                                                                             
-app.use('/images',express.static(path.join(name,'/public/images')))
-app.post("/image/upload",upload.single('file'),(req,res)=>{
-    try {
-        return res.status(200).json("uploaded")
-    }
-    catch(e) {
-        return res.status(400).json(e)
-    }
-})
-
-
-
-
-server.listen(3001)
+server.listen(port)

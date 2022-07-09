@@ -49,7 +49,7 @@ export default function Register() {
           })
       }
       else {
-        axios.post('http://localhost:3001/auth/register',formData)
+        axios.post('/auth/register',formData)
             .then(res=>{
                 if(res.data.isError) {
                     setErrormessage({
