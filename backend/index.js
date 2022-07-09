@@ -29,7 +29,7 @@ app.use("/users",userRouter)
 app.use("/post",postRouter)
 app.use("/message",messageRouter)
 app.use("/conversation",conversationRouter)
-mongoose.connect(process.env.MONGODB,()=>{});
+mongoose.connect('MONGODB = mongodb+srv://projecttest:sunzxcvbnm123@cluster0.09vfn.mongodb.net/test',()=>{});
 
 
 
