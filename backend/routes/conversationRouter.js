@@ -20,7 +20,6 @@ router.get('/isExists/:id1/:id2' , async(req,res)=>{
     try {
         const temp = await ConversationModal.find({members:{$all:[req.params.id1,req.params.id2]}})
         if(temp.length) {
-            console.log(temp)
             res.send(true)
         }
         else {
@@ -63,7 +62,6 @@ router.get('/list/:id', async(req,res)=>{
         res.json(names)
     }
     catch(e) {
-        console.log(e)
         res.status(404).send(e)
     }
 })

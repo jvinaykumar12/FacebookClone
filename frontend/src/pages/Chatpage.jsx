@@ -34,6 +34,7 @@ export default function Chatpage() {
         .then((res)=>{
             socket.current.emit('message',{messageText:message,userId:selectedFriend.id,
             messageId:res.data._id,senderId:state.user._id})
+            console.log(socket.current.id)
             setMessageList([...messageList,
                 <div ref={scrollReference} key={res.data._id}>
                     <MessageText  props={{isYou:res.data.sender===state.user._id?true:false,message:res.data.message}}/>
@@ -106,6 +107,7 @@ export default function Chatpage() {
         if(!socket.current) {
             socket.current = io()
             socket.current.on('connect',()=>{
+                console.log(socket.current.id)
                 socket.current.emit('adduser',{userId:state.user._id,socketId:socket.current.id})
                 socket.current.on('getuser',arg=>{
                     setCurrenUsers(arg)

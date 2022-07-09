@@ -18,7 +18,9 @@ const app = express()
 const server = http.createServer(app)
 const name = path.resolve()                                                                             
 const port = process.env.PORT||3001 
-app.use(cors())
+app.use(cors({
+    origin:'*'
+}))
 app.use(express.json())
 app.use(helmet())
 app.use(morgan("common"))
@@ -63,7 +65,7 @@ const io = new Server(server,{
 })
 let currentUsers = []
 const addUser = (userId,socketId)=>{
-    !currentUsers.some(element => element.userId === userId) &&
+    currentUsers = currentUsers.filter(element=>element.userId!==userId)
     currentUsers.push({userId,socketId})
 }
 const disconnectUser = (socketId)=>{
@@ -73,6 +75,7 @@ const disconnectUser = (socketId)=>{
 io.on("connection", socket=>{
     socket.emit("hello","socket is working")
     socket.on("adduser",arg=>{
+        console.log(arg)
         addUser(arg.userId,arg.socketId)
         console.log(currentUsers)
         socket.emit('online',currentUsers)
@@ -80,7 +83,7 @@ io.on("connection", socket=>{
     socket.on('disconnect',()=>{
         disconnectUser(socket.id)
         console.log(currentUsers)
-        console.log('disconnect')
+        console.log('disconnect ---------- ed')
         socket.emit('online',currentUsers)
     })
     socket.on('message',arg=>{

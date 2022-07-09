@@ -17,12 +17,10 @@ Authrouter.post("/register", async (req,res)=>{
                 age:req.body.age,
                 password:hashedPassword
             })
-            console.log(newUser)
             await newUser.save()
             res.status(200).send("user created successfully")
         }
         catch(e){
-            console.log(e.message)
             res.json({
                 isError:true,
                 error:e.message
@@ -40,7 +38,6 @@ Authrouter.post("/register", async (req,res)=>{
 Authrouter.post("/login",async (req,res)=>{
     try{
         const User = await Usermodel.findOne({name:req.body.name})
-        console.log(User)
 
         if(!User) {
             return res.status(403).json({
@@ -61,7 +58,6 @@ Authrouter.post("/login",async (req,res)=>{
         res.status(200).json(User)
     }
     catch(e) {
-        console.log(e)
         res.json({
             isError:true,
             error:e.message
@@ -71,6 +67,5 @@ Authrouter.post("/login",async (req,res)=>{
 
 
 
-console.log("called authRouter")
 
 export default Authrouter
