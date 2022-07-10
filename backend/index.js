@@ -18,9 +18,11 @@ const app = express()
 const server = http.createServer(app)
 const name = path.resolve()                                                                             
 const port = process.env.PORT||3001 
-app.use(cors({
-    origin:'*'
-}))
+app.use(cors(
+    {
+        origin:'*'
+    }
+))
 app.use(express.json())
 app.use(helmet())
 app.use(morgan("common"))
@@ -32,8 +34,6 @@ app.use("/post",postRouter)
 app.use("/message",messageRouter)
 app.use("/conversation",conversationRouter)
 mongoose.connect(process.env.MONGODB,()=>{});
-
-
 
 app.get('/',(req,res)=>{
     res.sendFile('index.html')
@@ -64,31 +64,33 @@ const io = new Server(server,{
     }                                                               //handles socket,.io
 })
 let currentUsers = []
+
 const addUser = (userId,socketId)=>{
-    currentUsers = currentUsers.filter(element=>element.userId!==userId)
+    currentUsers = currentUsers.filter(element=>element.userId!==userId) 
     currentUsers.push({userId,socketId})
 }
+
 const disconnectUser = (socketId)=>{
-    currentUsers = currentUsers.filter(element=>element.socketId!==socketId)
+    currentUsers = currentUsers.filter(element=>element.socketId!==socketId)    
 }
 
 io.on("connection", socket=>{
-    socket.emit("hello","socket is working")
+
     socket.on("adduser",arg=>{
         console.log(arg)
-        addUser(arg.userId,arg.socketId)
+        addUser(arg.userId,socket.id)
         console.log(currentUsers)
-        socket.emit('online',currentUsers)
+        io.emit('online',currentUsers)
     })
     socket.on('disconnect',()=>{
         disconnectUser(socket.id)
         console.log(currentUsers)
         console.log('disconnect ---------- ed')
-        socket.emit('online',currentUsers)
+        io.emit('disonline',currentUsers)
     })
     socket.on('message',arg=>{
         const user = currentUsers.find(e=>e.userId === arg.userId )
-        user && socket.to(user.socketId).emit('receiveMessage',{message:arg.messageText,senderId:arg.senderId,messageId:arg.messageId})        
+        user && io.to(user.socketId).emit('receiveMessage',{message:arg.messageText,senderId:arg.senderId,messageId:arg.messageId})        
     })
 })
 

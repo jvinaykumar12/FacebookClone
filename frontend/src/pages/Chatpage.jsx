@@ -18,9 +18,9 @@ export default function Chatpage() {
     const [messageList,setMessageList] = useState([])
     const [incomingMessage,setIncomingMessage] = useState()
     const [currentUsers,setCurrenUsers] = useState()
+    const [socketChange,setSocketChange] = useState(null)
     const scrollReference = useRef()
     const socket = useRef()
-
     const updateMessage = (e)=>{ 
         setMessage(e.target.value)
     }
@@ -46,7 +46,7 @@ export default function Chatpage() {
 
 
     const selectName = (e)=>{
-        console.log(selectedFriend.id)
+
         setSelectedFriend({
             ...e,
             id:e._id
@@ -96,7 +96,7 @@ export default function Chatpage() {
     useEffect(()=>{
         if(incomingMessage && incomingMessage.senderId===selectedFriend.id) {
             setMessageList([...messageList,
-                <div ref={scrollReference} key={incomingMessage.messageId + 'random'}>
+                <div ref={scrollReference} key={incomingMessage.messageId}>
                     <MessageText  props={{isYou:false,message:incomingMessage.message}}/>
                 </div>
             ])
@@ -104,18 +104,35 @@ export default function Chatpage() {
     },[incomingMessage])
 
     useEffect(()=>{
+        if(socket.current) {
+            socket.current.emit('adduser',{userId:state.user._id})   
+        }
+    },[socketChange])
+
+    useEffect(()=>{
         if(!socket.current) {
             socket.current = io()
+            socket.current.on('online',arg=>{
+                console.log(arg)
+                setCurrenUsers(arg)
+            })
+            socket.current.on('receiveMessage',(message)=>{
+                setIncomingMessage(message)              
+            })
             socket.current.on('connect',()=>{
                 console.log(socket.current.id)
-                socket.current.emit('adduser',{userId:state.user._id,socketId:socket.current.id})
-                socket.current.on('getuser',arg=>{
-                    setCurrenUsers(arg)
-                })
-                socket.current.on('receiveMessage',(message)=>{
-                    setIncomingMessage(message)              
-                })
-            })     
+                if(socket.current.connected) {
+                    setSocketChange(socket.current.id)
+                }
+            })
+            socket.current.on('disonline',(arg)=>{
+                setIncomingMessage(arg)
+                console.log(arg)
+            })
+            socket.current.on('disconnect',()=>{
+                console.log(socket.current.id)
+            })
+            console.log("test")
         }
     },[])
 
