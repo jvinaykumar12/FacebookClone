@@ -73,7 +73,7 @@ export default function Chatpage() {
     useEffect(()=>{
         if(conversationId) {
             axios.get(`/message/${conversationId}`)
-            .then(res=>{
+            .then(res=>{ 
                 const temp = res.data.map(details=>{
                     return(
                         <div ref={scrollReference} key={details._id}>   
