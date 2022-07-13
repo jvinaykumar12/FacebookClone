@@ -33,7 +33,6 @@ export default function Profile() {
           id:state.user._id,
           name:state.user.name
         })
-        console.log(profile.name)
         temp
         .then(res=>{
           if(!e) {

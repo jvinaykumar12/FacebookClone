@@ -56,7 +56,6 @@ postRouter.delete("/:id", async (req,res) =>{
 
 postRouter.put("/:id/like",async (req,res)=>{
     try{
-        console.log("liked")
         const post = await postModel.findById(req.params.id)
         if(post) {
             if(!post.likes.includes(req.body.id)) {
@@ -79,7 +78,6 @@ postRouter.put("/:id/like",async (req,res)=>{
 
 postRouter.put("/:id/dislike",async (req,res)=>{
     try{
-        console.log("disliked")
         const post = await postModel.findById(req.params.id)
         if(post) {
             if(!post.dislikes.includes(req.body.id)) {
@@ -99,11 +97,8 @@ postRouter.put("/:id/dislike",async (req,res)=>{
 
 postRouter.get("/:userName", async (req,res)=>{
     try{
-        console.log("test")
         const id = await Usermodel.findOne({name:req.params.userName})
-        console.log(id)
         const post = await postModel.find({userId:id._id})
-        console.log(post)
     
         if(post) {
             res.json({

@@ -7,7 +7,6 @@ router.post("/", async (req, res) => {               //message
     const message = new messageModal(req.body);
     try{
         const temp = await message.save();
-        console.log(temp)
         res.send(temp)
     }
     catch(e) {
@@ -18,7 +17,6 @@ router.post("/", async (req, res) => {               //message
 router.get('/:conversationId', async (req,res)=>{
     try{
         const temp = await messageModal.find({conversationId:req.params.conversationId})
-        console.log(temp)
         res.send(temp)
     }
     catch(e) {

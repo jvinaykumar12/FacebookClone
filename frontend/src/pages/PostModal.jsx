@@ -31,6 +31,7 @@ export default function PostModal() {
         if(imagefile) {
             const newNameForImage = Date.now() + imagefile.name 
             newPost.image = newNameForImage
+            newPost.name = state.user.name
             const imageData = new FormData()
             imageData.append("name",newNameForImage)
             imageData.append("file",imagefile)
