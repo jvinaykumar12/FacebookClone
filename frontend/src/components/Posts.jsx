@@ -47,7 +47,7 @@ export default function Post(props) {
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              R
+              {props.props.name?props.props.name.charAt(0):'Q'  }
             </Avatar> 
           }
           action={
@@ -55,14 +55,13 @@ export default function Post(props) {
               <MoreVertIcon />
             </IconButton>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={props.props.name}
+          subheader={(new Date(props.props.createdAt)).toDateString()}
         />
         <CardMedia
           component="img"
           height="60%"
           image = {`https://socialmedia.azurewebsites.net/images/${props.props.image}`}
-          alt="Paella dish"
           crossOrigin="anonymous"
         />
         <CardContent>

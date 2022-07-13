@@ -14,11 +14,11 @@ export default function Friendbar(props) {
       <Typography>{e.name}</Typography>
       {
         toggle?
-        <Fab size="small" variant='extended' sx = {{display:'flex',gap:'5px',alignItems:'center',alignContent:'center',backgroundColor:'white'}} onClick={()=>{console.log('test');unFollowUser(e.name); setToggle(false)}}>
+        <Fab size="small" variant='extended' sx = {{display:'flex',gap:'5px',alignItems:'center',alignContent:'center',backgroundColor:'white'}} onClick={()=>{unFollowUser(e.name); setToggle(false)}}>
           <Remove />
           <Typography>UNFOLLOW</Typography>
         </Fab>:
-        <Fab size="small" variant='extended' sx = {{display:'flex',gap:'5px',alignItems:'center',alignContent:'center',backgroundColor:'green'}} onClick={()=>{console.log('test');followUser(e.name); setToggle(true)}}>
+        <Fab size="small" variant='extended' sx = {{display:'flex',gap:'5px',alignItems:'center',alignContent:'center',backgroundColor:'green'}} onClick={()=>{followUser(e.name); setToggle(true)}}>
           <Add />
           <Typography>FOLLOW</Typography>
         </Fab>
