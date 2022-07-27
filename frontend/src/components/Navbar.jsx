@@ -43,6 +43,10 @@ export default function Navbar() {
     navigate('/')
   }
 
+  const toChat = ()=>{
+    navigate('/chat')
+  }
+
   useEffect(()=>{
     if(searchData) navigate('/profile',{replace:true})
   },[profile.name])
@@ -51,19 +55,19 @@ export default function Navbar() {
   return (
     <AppBar position='sticky' sx={{height:'10vh'}}>
         <Toolbar sx={{display : 'flex',justifyContent: 'space-between'}}>
-            <Typography onClick={toHome}>Social Media</Typography>
+            <Typography onClick={toHome} sx={{display:{xs:'none',sm:'block'}}}>Social Media</Typography>
             <Box sx={{display:'flex',alignItems:'center',alignContent:'center',gap:'5px'}}>
-                <TextField onChange={updateSearch} value = {searchData} sx={{display:{xs:'none',sm:'block'},backgroundColor:'white',borderRadius:'5px'}} size='small'/>
+                <TextField onChange={updateSearch} value = {searchData} sx={{backgroundColor:'white',borderRadius:'5px'}} size='small'/>
                 <SearchTwoTone onClick={sendData}/>
             </Box>
             <CustomizedIcon>
-                <Badge badgeContent = {4} color="secondary">
+                <Badge badgeContent = {0} onClick={toChat} color="secondary">
                     <EmailIcon></EmailIcon>
                 </Badge>
-                <Badge badgeContent = {1} color="secondary">
+                <Badge badgeContent = {0} sx={{display:{xs:'none',sm:'block'}}}  color="secondary">
                     <Notifications/>
                 </Badge>
-                <Avatar src={require('./test.png')} sx={{height:"30px",width:"30px"}}></Avatar>
+                <Avatar onClick={toHome} src={require('./test.png')} sx={{height:"30px",width:"30px"}}></Avatar>
             </CustomizedIcon>
         </Toolbar>
     </AppBar>
